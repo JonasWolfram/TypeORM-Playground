@@ -1,19 +1,9 @@
-import {
-  Entity,
-  BaseEntity,
-  Column,
-  Generated,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
 
 @Entity()
 export class Person extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  @Generated("uuid")
-  uuid: string;
 
   @Column()
   first_name: string;
@@ -31,9 +21,4 @@ export class Person extends BaseEntity {
     length: 10,
   })
   card_number: string;
-
-  @Column({
-    type: "numeric",
-  })
-  balance: number;
 }

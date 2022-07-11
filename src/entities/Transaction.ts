@@ -1,14 +1,16 @@
 import {
-  BaseEntity,
-  Column,
   Entity,
-  JoinColumn,
-  ManyToOne,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
   PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+  BaseEntity,
 } from "typeorm";
 import { Client } from "./Client";
 
-export enum TransactionTypes {
+export enum TransactionType {
   DEPOSIT = "deposit",
   WITHDRAW = "withdraw",
 }
@@ -20,7 +22,7 @@ export class Transaction extends BaseEntity {
 
   @Column({
     type: "enum",
-    enum: TransactionTypes,
+    enum: TransactionType,
   })
   type: string;
 
@@ -29,9 +31,17 @@ export class Transaction extends BaseEntity {
   })
   amount: number;
 
-  @ManyToOne(() => Client, (client) => client.transaction)
+  @ManyToOne(() => Client, (client) => client.transactions, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({
     name: "client_id",
   })
   client: Client;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }

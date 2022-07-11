@@ -5,6 +5,7 @@ import {
   UpdateDateColumn,
   OneToMany,
   ManyToMany,
+  JoinTable,
 } from "typeorm";
 import { Banker } from "./Banker";
 import { Transaction } from "./Transaction";
@@ -13,8 +14,13 @@ import { Person } from "./utils/Person";
 @Entity("client")
 export class Client extends Person {
   @Column({
-    default: true,
+    type: "numeric",
+  })
+  balance: number;
+
+  @Column({
     name: "active",
+    default: true,
   })
   is_active: boolean;
 
@@ -22,25 +28,25 @@ export class Client extends Person {
     type: "simple-json",
     nullable: true,
   })
-  additional_information: {
+  additional_info: {
     age: number;
     hair_color: string;
   };
 
-  @Column({
-    type: "simple-array",
-  })
+  @Column({ type: "simple-array", default: [] })
   family_members: string[];
-
-  @OneToMany(() => Transaction, (transaction) => transaction.client)
-  transaction: Transaction[];
-
-  @ManyToMany(() => Banker)
-  banker: Banker[];
 
   @CreateDateColumn()
   created_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @ManyToMany((type) => Banker, {
+    cascade: true,
+  })
+  bankers: Banker[];
+
+  @OneToMany(() => Transaction, (transaction) => transaction.client)
+  transactions: Transaction[];
 }
